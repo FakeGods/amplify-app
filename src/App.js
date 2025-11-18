@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { withAuthenticator, Button, TextField, Table, TableCell, TableBody, TableRow, TableHead, Alert } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { fetchAuthSession } from 'aws-amplify/auth';
+import React, { useState } from "react";
 
-function App() {
+function App({ signOut, user }) {
+  const TEST_URL = "https://dsm265hrp5.execute-api.eu-central-1.amazonaws.com/prod/items";
+
+
+  const fetchRecommendations = async () => {
+    try {
+      const authToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+
+      const response = await fetch(TEST_URL, {
+        method: "GET",
+        headers: {
+          Authorization: authToken,
+        },
+      });
+
+      const data = await response.json();
+
+      console.log("Data")
+      console.log(data)
+    } catch (error) {
+      console.error("Failed to fetch recommendations:", error);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Hello {user.username}</h1>
+      <Button variation="primary" onClick={signOut}>Sign out</Button>
+      <Button variation="primary" onClick={fetchRecommendations}>Load Recommendations</Button>
     </div>
   );
 }
 
-export default App;
+export default withAuthenticator(App);
