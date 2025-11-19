@@ -4,7 +4,7 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import React, { useState } from "react";
 
 function App({ signOut, user }) {
-  const TEST_URL = "https://dsm265hrp5.execute-api.eu-central-1.amazonaws.com/prod/items";
+  const TEST_URL = "";
 
 
   const fetchRecommendations = async () => {
