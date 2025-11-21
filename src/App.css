@@ -1,38 +1,348 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #f5f5f3 0%, #efefec 100%);
+  min-height: 100vh;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f5f3 0%, #efefec 100%);
+}
+
+.App > div {
+  background: #fafaf8;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid #e8e8e5;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.user-info {
+  color: #999;
+  font-size: 13px;
+  margin-bottom: 30px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 11px 22px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 140px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.primary-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes App-logo-spin {
+.warning-btn {
+  background: #ff6b6b;
+  color: white;
+}
+
+.warning-btn:hover:not(:disabled) {
+  background: #ee5a52;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+}
+
+.alert-box {
+  padding: 13px 18px;
+  border-radius: 6px;
+  margin-bottom: 18px;
+  animation: slideIn 0.3s ease;
+  border-left: 3px solid;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.alert-error {
+  background: #ffebee;
+  border-left-color: #f44336;
+  color: #c62828;
+}
+
+.alert-success {
+  background: #e8f5e9;
+  border-left-color: #4caf50;
+  color: #2e7d32;
+}
+
+.alert-box pre {
+  background: #f5f5f5;
+  padding: 11px 16px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 10px;
+}
+
+@keyframes slideIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(-10px);
   }
   to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .App > div {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+/* Auth Pages Styling */
+.home-container,
+.signin-container,
+.signup-container,
+.callback-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f5f3 0%, #efefec 100%);
+}
+
+.dashboard,
+.signin-card,
+.signup-card,
+.callback-card {
+  background: #fafaf8;
+  border-radius: 12px;
+  border: 1px solid #e8e8e5;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.auth-prompt {
+  text-align: center;
+}
+
+.auth-prompt h1 {
+  margin-bottom: 15px;
+  font-size: 32px;
+}
+
+.auth-prompt p {
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+.auth-prompt .primary-btn {
+  display: inline-block;
+  margin: 10px 5px;
+  min-width: 160px;
+}
+
+.divider {
+  display: block;
+  margin: 20px 0;
+  color: #ccc;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.user-header h1 {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.logout-btn {
+  padding: 10px 20px;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.logout-btn:hover {
+  background: #ee5a52;
+  transform: translateY(-2px);
+}
+
+.signin-subtitle,
+.signup-subtitle {
+  color: #999;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.signin-btn,
+.signup-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+}
+
+.signin-footer,
+.signup-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.auth-link {
+  color: #4a4a4a;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid #4a4a4a;
+  transition: color 0.3s ease;
+}
+
+.auth-link:hover {
+  color: #333;
+}
+
+.signup-info {
+  color: #999;
+  font-size: 13px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.auth-info {
+  background: #f5f5f3;
+  padding: 18px;
+  border-radius: 8px;
+  margin-top: 25px;
+  border-left: 3px solid #4a4a4a;
+}
+
+.auth-info p {
+  margin: 8px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.auth-info strong {
+  color: #333;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-top: 20px;
+  border: 3px solid #e8e8e5;
+  border-top-color: #4a4a4a;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
     transform: rotate(360deg);
+  }
+}
+
+.auth-loading,
+.auth-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 16px;
+  color: #666;
+}
+
+@media (max-width: 600px) {
+  .dashboard,
+  .signin-card,
+  .signup-card,
+  .callback-card {
+    padding: 20px;
+  }
+
+  .user-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logout-btn {
+    width: 100%;
   }
 }
