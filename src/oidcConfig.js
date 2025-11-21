@@ -13,7 +13,8 @@ export const oidcConfig = {
   clientId: '5fiaeb4q798nptctg97mfgc9p3',
 
   // Your Cognito domain (just the domain name, not full URL)
-  // Example: myfakegods-auth
+  // This should match what you configured in Cognito
+  // Example: myfakegods-auth (NOT us-east-1_myfakegods-auth)
   cognitoDomain: 'us-east-1gsnf0pn2f',
 
   // Redirect URI after successful login (includes /callback path)
@@ -57,8 +58,9 @@ export const oidcConfig = {
     return `https://${this.cognitoDomain}.auth.${this.region}.amazoncognito.com/logout?client_id=${this.clientId}&logout_uri=${encodeURIComponent(this.logoutRedirectUri)}`;
   },
 
-  // OIDC scopes to request
-  scopes: ['openid', 'email', 'profile'],
+  // OIDC scopes to request (must match "Allowed OAuth Scopes" in Cognito App Client)
+  // Cognito shows: email, openid, phone — do not request scopes not enabled (eg. "profile")
+  scopes: ['openid', 'email', 'phone'],
 
   // Response type for authorization flow
   responseType: 'code',

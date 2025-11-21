@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Callback from './pages/Callback';
+import Debug from './pages/Debug';
 
 function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ function AppRoutes() {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/callback" element={<Callback />} />
+      <Route path="/debug" element={<Debug />} />
     </Routes>
   );
 }

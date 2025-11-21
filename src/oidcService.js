@@ -8,9 +8,15 @@ import { oidcConfig } from './oidcConfig';
 /**
  * Generate authorization URL for login
  */
-export const getAuthorizationUrl = (options = {}) => {
+export const getAuthorizationUrl = async (options = {}) => {
   const nonce = generateNonce();
   const state = generateState();
+
+  // PKCE: generate a code_verifier and code_challenge
+  const codeVerifier = generateCodeVerifier();
+  // store verifier to use when exchanging code
+  sessionStorage.setItem('oidc_code_verifier', codeVerifier);
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
 
   const params = new URLSearchParams({
     client_id: oidcConfig.clientId,
@@ -19,6 +25,8 @@ export const getAuthorizationUrl = (options = {}) => {
     redirect_uri: oidcConfig.redirectUri,
     nonce: nonce,
     state: state,
+    code_challenge: codeChallenge,
+    code_challenge_method: 'S256',
   });
 
   // Allow passing extra query params like prompt=signup
@@ -28,7 +36,15 @@ export const getAuthorizationUrl = (options = {}) => {
     }
   });
 
-  return `${oidcConfig.authorizationEndpoint}?${params.toString()}`;
+  const authUrl = `${oidcConfig.authorizationEndpoint}?${params.toString()}`;
+  console.log('Authorization URL:', authUrl);
+  console.log('OIDC Config:', {
+    endpoint: oidcConfig.authorizationEndpoint,
+    clientId: oidcConfig.clientId,
+    redirectUri: oidcConfig.redirectUri,
+  });
+
+  return authUrl;
 };
 
 /**
@@ -41,6 +57,8 @@ export const exchangeCodeForTokens = async (code) => {
       client_id: oidcConfig.clientId,
       code: code,
       redirect_uri: oidcConfig.redirectUri,
+      // include PKCE code_verifier if present
+      code_verifier: sessionStorage.getItem('oidc_code_verifier') || '',
     });
 
     const response = await fetch(oidcConfig.tokenEndpoint, {
@@ -159,4 +177,34 @@ const generateState = () => {
                 Math.random().toString(36).substring(2, 15);
   sessionStorage.setItem('oidc_state', state);
   return state;
+};
+
+// PKCE helpers
+const generateCodeVerifier = (length = 64) => {
+  // create a random string of given length using characters allowed in code verifier
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+  let result = '';
+  const array = new Uint32Array(length);
+  window.crypto.getRandomValues(array);
+  for (let i = 0; i < length; i++) {
+    result += chars[array[i] % chars.length];
+  }
+  return result;
+};
+
+const generateCodeChallenge = async (verifier) => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(verifier);
+  const digest = await window.crypto.subtle.digest('SHA-256', data);
+  const bytes = new Uint8Array(digest);
+  return base64UrlEncode(bytes);
+};
+
+const base64UrlEncode = (bytes) => {
+  let binary = '';
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 };

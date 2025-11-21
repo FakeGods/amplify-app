@@ -2,10 +2,6 @@ import React from 'react';
 import { useAuth } from '../AuthMiddleware';
 import { logout } from '../oidcService';
 
-/**
- * Home component - Main landing page
- * Shows authenticated user dashboard or prompts to sign in
- */
 const Home = () => {
   const { user, isAuth, loading } = useAuth();
   const [recommendations, setRecommendations] = React.useState(null);
@@ -52,10 +48,9 @@ const Home = () => {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      await logout();
-      window.location.href = '/';
+      logout();
     } catch (err) {
       console.error('Logout error:', err);
       alert('Logout failed: ' + err.message);

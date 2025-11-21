@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import { getAuthorizationUrl } from '../oidcService';
 
-/**
- * SignIn component - OIDC login page
- * Initiates the OAuth 2.0 authorization code flow
- */
 const SignIn = () => {
   const [error, setError] = useState(null);
+  const [debugUrl, setDebugUrl] = useState(null);
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
-      const authUrl = getAuthorizationUrl();
-      // Redirect to Cognito login page
-      window.location.href = authUrl;
+      const authUrl = await getAuthorizationUrl();
+      setDebugUrl(authUrl);
+      console.log('Auth URL:', authUrl);
+
+      // Redirect after a short delay so user can see it
+      setTimeout(() => {
+        window.location.href = authUrl;
+      }, 500);
     } catch (err) {
       setError(err.message || 'Failed to initiate sign in');
       console.error('Sign in error:', err);
@@ -34,6 +36,13 @@ const SignIn = () => {
           </div>
         )}
 
+        {debugUrl && (
+          <div className="alert-box alert-success" style={{ fontSize: '11px', wordBreak: 'break-all' }}>
+            <strong>Auth URL:</strong>
+            <pre style={{ fontSize: '10px', margin: '5px 0' }}>{debugUrl}</pre>
+          </div>
+        )}
+
         <form onSubmit={handleSignIn}>
           <button type="submit" className="primary-btn signin-btn">
             Sign In with Cognito
@@ -48,12 +57,6 @@ const SignIn = () => {
             </a>
           </p>
         </div>
-      </div>
-    </div>
-  );
-};
-
-export default SignIn;
       </div>
     </div>
   );
