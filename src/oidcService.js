@@ -118,9 +118,15 @@ export const logout = () => {
   localStorage.removeItem('refresh_token');
   sessionStorage.removeItem('oidc_nonce');
   sessionStorage.removeItem('oidc_state');
+  sessionStorage.removeItem('oidc_code_verifier');
 
+  // Build logout URL with proper parameters
+  const logoutUrl = `https://${oidcConfig.cognitoDomain}.auth.${oidcConfig.region}.amazoncognito.com/logout?client_id=${oidcConfig.clientId}&logout_uri=${encodeURIComponent(oidcConfig.logoutRedirectUri)}`;
+  
+  console.log('Logging out, redirecting to:', logoutUrl);
+  
   // Redirect to logout endpoint
-  window.location.href = oidcConfig.logoutEndpoint;
+  window.location.href = logoutUrl;
 };
 
 /**
