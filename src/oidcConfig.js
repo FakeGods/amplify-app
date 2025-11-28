@@ -18,14 +18,28 @@ export const oidcConfig = {
   cognitoDomain: 'eu-central-1ddyapmral',
 
   // Redirect URI after successful login (includes /callback path)
-  redirectUri: process.env.NODE_ENV === 'production'
-    ? 'https://d84l1y8p4kdic.cloudfront.net'
-    : 'http://localhost:3000/callback',
+  get redirectUri() {
+    const isProduction = process.env.NODE_ENV === 'production' || 
+                        (typeof window !== 'undefined' && window.location.hostname.includes('cloudfront.net'));
+    console.log('Redirect URI Detection:', {
+      NODE_ENV: process.env.NODE_ENV,
+      hostname: typeof window !== 'undefined' ? window.location.hostname : 'N/A',
+      isProduction,
+      redirectUri: isProduction ? 'https://dnjkc99shrne2.cloudfront.net/callback' : 'http://localhost:3000/callback'
+    });
+    return isProduction
+      ? 'https://dnjkc99shrne2.cloudfront.net/callback'
+      : 'http://localhost:3000/callback';
+  },
 
   // Redirect URI after logout
-  logoutRedirectUri: process.env.NODE_ENV === 'production'
-    ? 'https://yourdomain.com'
-    : 'http://localhost:3000',
+  get logoutRedirectUri() {
+    const isProduction = process.env.NODE_ENV === 'production' || 
+                        (typeof window !== 'undefined' && window.location.hostname.includes('cloudfront.net'));
+    return isProduction
+      ? 'https://dnjkc99shrne2.cloudfront.net'
+      : 'http://localhost:3000';
+  },
 
   // OIDC Issuer URL (constructed from domain and region)
   // Format: https://cognito-idp.{region}.amazonaws.com/{userPoolId}

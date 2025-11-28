@@ -15,6 +15,9 @@
       "auth": {
         "amplifyappf0d928f1": {},
         "userPoolGroups": {}
+      },
+      "hosting": {
+        "S3AndCloudFront": {}
       }
     }
   }

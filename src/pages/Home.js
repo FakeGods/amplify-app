@@ -73,7 +73,7 @@ const Home = () => {
     return (
       <div className="home-container">
         <div className="auth-prompt">
-          <h1>Welcome</h1>
+          <h1>Witam Szefa</h1>
           <p>Please sign in to continue</p>
           <a href="/signin" className="primary-btn">
             Sign In
@@ -92,7 +92,7 @@ const Home = () => {
     <div className="home-container">
       <div className="dashboard">
         <div className="user-header">
-          <h1>Dashboard</h1>
+          <h1>Witam Szefa</h1>
           <div className="user-info">
             <span>Welcome, {user?.email || 'User'}</span>
             <button className="logout-btn" onClick={handleLogout}>
