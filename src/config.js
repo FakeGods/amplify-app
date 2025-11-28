@@ -1,21 +1,15 @@
 // API Configuration
-// Update this with your deployed API Gateway endpoint from the backend stack
+// API Gateway endpoint from the backend stack deployment
 
 export const config = {
-  // TODO: Replace with your actual API Gateway endpoint URL
-  // You can find this in AWS CloudFormation stack outputs (ServerlessBackendStack -> ApiEndpoint)
-  // or by running: aws cloudformation describe-stacks --stack-name ServerlessBackendStack --profile FakeGods
-  // 
-  // Format: https://{api-id}.execute-api.{region}.amazonaws.com/{stage}
-  // Example: https://abc123xyz.execute-api.us-east-1.amazonaws.com/prod
-  
+  // API Gateway endpoint from ServerlessBackendStack deployment
   API_ENDPOINT: process.env.REACT_APP_API_ENDPOINT || 
-                'https://YOUR_API_GATEWAY_ID.execute-api.us-east-1.amazonaws.com/prod',
+                'https://bytzn6agd7.execute-api.eu-central-1.amazonaws.com/api',
   
   // API paths
   API_PATHS: {
     recommendations: '/recommendations',
-    // Add more API paths as needed
+    feedback: '/feedback',
   }
 };
 

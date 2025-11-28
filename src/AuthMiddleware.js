@@ -41,20 +41,49 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuthentication = () => {
+    const checkAuthentication = async () => {
       try {
         const authenticated = isAuthenticated();
         setIsAuth(authenticated);
 
         if (authenticated) {
-          const token = getAccessToken();
-          // Decode JWT to get user info (basic decoding)
-          const payload = parseJwt(token);
-          setUser({
-            email: payload.email || payload['cognito:username'] || 'User',
-            username: payload['cognito:username'],
-            aud: payload.aud,
-          });
+          // Get ID token from localStorage
+          const idToken = localStorage.getItem('id_token');
+          
+          if (idToken) {
+            const payload = parseJwt(idToken);
+            
+            // Extract user info from ID token claims
+            const email = payload.email || 'N/A';
+            const cognitoUsername = payload['cognito:username'];
+            // Check for 'name' attribute first, then username, then fallback
+            const displayName = payload.name || cognitoUsername || email.split('@')[0];
+            
+            // Capitalize first letter
+            const formattedName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+            
+            setUser({
+              email: email,
+              username: formattedName,
+              sub: payload.sub,
+              name: formattedName,
+              cognitoUsername: cognitoUsername,
+            });
+            
+            console.log('User info from ID token:', { 
+              email, 
+              username: formattedName, 
+              cognitoUsername,
+              rawName: displayName,
+              allClaims: payload 
+            });
+          } else {
+            console.warn('No ID token found in localStorage');
+            setUser({
+              email: 'N/A',
+              username: 'User',
+            });
+          }
         } else {
           setUser(null);
         }

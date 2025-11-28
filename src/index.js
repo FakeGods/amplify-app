@@ -6,7 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import { Amplify } from 'aws-amplify';
 import awsExports from './aws-exports';
 
-Amplify.configure(awsExports);
+// Configure Amplify without Identity Pool (authentication-only mode)
+const amplifyConfig = {
+  ...awsExports,
+  aws_cognito_identity_pool_id: undefined, // Disable Identity Pool
+};
+
+Amplify.configure(amplifyConfig);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
