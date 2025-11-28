@@ -3,20 +3,25 @@ import { getAuthorizationUrl } from '../oidcService';
 
 const SignUp = () => {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     try {
-      // Cognito Hosted UI does not accept `prompt=signup` (invalid_prompt).
-      // Request a normal authorization URL and let the Hosted UI show sign-up option.
+      // Use Cognito Hosted UI for signup
+      // The hosted UI will show the signup form when users don't have an account
       const authUrl = await getAuthorizationUrl();
-      console.log('Redirecting to signup (no prompt):', authUrl);
+      
+      // Redirect to Cognito Hosted UI
+      // Users can click "Sign up" link on the login page
       window.location.href = authUrl;
     } catch (err) {
-      setError(err.message || 'Failed to initiate sign up');
       console.error('Sign up error:', err);
+      setError(err.message || 'Failed to initiate sign up');
+      setLoading(false);
     }
   };
 
@@ -32,13 +37,20 @@ const SignUp = () => {
           </div>
         )}
 
-        <form onSubmit={handleSignUp}>
-          <p className="signup-info">
-            We use Cognito's secure authentication. Click below to create your account.
+        <div className="signup-info" style={{ marginBottom: '20px', padding: '15px', background: '#f0f0f0', borderRadius: '8px' }}>
+          <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>
+            You'll be redirected to our secure authentication page. 
+            Click <strong>"Sign up"</strong> on the login page to create a new account.
           </p>
+        </div>
 
-          <button type="submit" className="primary-btn signup-btn">
-            Create Account with Cognito
+        <form onSubmit={handleSignUp}>
+          <button 
+            type="submit" 
+            className="primary-btn signup-btn" 
+            disabled={loading}
+          >
+            {loading ? 'Redirecting...' : 'Continue to Sign Up'}
           </button>
         </form>
 

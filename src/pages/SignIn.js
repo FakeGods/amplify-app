@@ -3,7 +3,6 @@ import { getAuthorizationUrl } from '../oidcService';
 
 const SignIn = () => {
   const [error, setError] = useState(null);
-  const [debugUrl, setDebugUrl] = useState(null);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -11,13 +10,8 @@ const SignIn = () => {
 
     try {
       const authUrl = await getAuthorizationUrl();
-      setDebugUrl(authUrl);
       console.log('Auth URL:', authUrl);
-
-      // Redirect after a short delay so user can see it
-      setTimeout(() => {
-        window.location.href = authUrl;
-      }, 500);
+      window.location.href = authUrl;
     } catch (err) {
       setError(err.message || 'Failed to initiate sign in');
       console.error('Sign in error:', err);
@@ -33,13 +27,6 @@ const SignIn = () => {
         {error && (
           <div className="alert-box alert-error">
             <strong>Error:</strong> {error}
-          </div>
-        )}
-
-        {debugUrl && (
-          <div className="alert-box alert-success" style={{ fontSize: '11px', wordBreak: 'break-all' }}>
-            <strong>Auth URL:</strong>
-            <pre style={{ fontSize: '10px', margin: '5px 0' }}>{debugUrl}</pre>
           </div>
         )}
 

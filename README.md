@@ -1,6 +1,51 @@
-# Getting Started with Create React App
+# Serverless Frontend Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This React application provides authentication and API integration with AWS Cognito and API Gateway.
+
+## Prerequisites
+
+- Node.js 16+ installed
+- AWS account with deployed backend (serverless-backend stack)
+- Cognito User Pool configured
+
+## Setup Instructions
+
+### 1. Install Dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure API Endpoint
+
+**Option A: Using Environment Variables (Recommended)**
+
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. Get your API Gateway endpoint from CloudFormation:
+   ```bash
+   aws cloudformation describe-stacks --stack-name ServerlessBackendStack --profile FakeGods --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" --output text
+   ```
+
+3. Update `.env.local` with your actual API endpoint:
+   ```
+   REACT_APP_API_ENDPOINT=https://YOUR_API_ID.execute-api.us-east-1.amazonaws.com/prod
+   ```
+
+**Option B: Direct Configuration**
+
+Edit `src/config.js` and replace the `API_ENDPOINT` value with your deployed API Gateway URL.
+
+### 3. Verify Cognito Configuration
+
+Check `src/aws-exports.js` and `src/oidcConfig.js` to ensure:
+- User Pool ID matches your Cognito User Pool
+- App Client ID is correct
+- OAuth domain is set properly
+- Callback URLs include `http://localhost:3000/callback`
 
 ## Available Scripts
 

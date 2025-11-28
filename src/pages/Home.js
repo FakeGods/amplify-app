@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAuth } from '../AuthMiddleware';
 import { logout } from '../oidcService';
+import { getApiUrl, config } from '../config';
+import { fetchAuthSession } from 'aws-amplify/auth';
 
 const Home = () => {
   const { user, isAuth, loading } = useAuth();
@@ -22,20 +24,29 @@ const Home = () => {
     setRecommendations(null);
 
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await fetch(
-        'https://z4v1ognu3l.execute-api.eu-central-1.amazonaws.com/api/recommendations',
-        {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      // Get the ID token from Amplify auth session
+      const authToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+      
+      if (!authToken) {
+        throw new Error('No authentication token available');
+      }
+
+      const apiUrl = getApiUrl(config.API_PATHS.recommendations);
+      
+      console.log('Calling API:', apiUrl);
+      console.log('Using token:', authToken ? 'Token present' : 'No token');
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': authToken,
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`API error: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();

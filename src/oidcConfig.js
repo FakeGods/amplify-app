@@ -3,19 +3,19 @@
 
 export const oidcConfig = {
   // Your Cognito User Pool region
-  region: 'us-east-1',
+  region: 'eu-central-1',
 
   // Your Cognito User Pool ID (format: region_randomString)
   // Example: us-east-1_xxxxxxxxx
-  userPoolId: 'us-east-1_GSnf0PN2f',
+  userPoolId: 'eu-central-1_dDyaPMral',
 
   // Your Cognito App Client ID
-  clientId: '5fiaeb4q798nptctg97mfgc9p3',
+  clientId: '1isqd8m6fdprpgu38hagu7cea4',
 
   // Your Cognito domain (just the domain name, not full URL)
   // This should match what you configured in Cognito
   // Example: myfakegods-auth (NOT us-east-1_myfakegods-auth)
-  cognitoDomain: 'us-east-1gsnf0pn2f',
+  cognitoDomain: 'eu-central-1ddyapmral',
 
   // Redirect URI after successful login (includes /callback path)
   redirectUri: process.env.NODE_ENV === 'production'
@@ -60,7 +60,7 @@ export const oidcConfig = {
 
   // OIDC scopes to request (must match "Allowed OAuth Scopes" in Cognito App Client)
   // Cognito shows: email, openid, phone — do not request scopes not enabled (eg. "profile")
-  scopes: ['openid', 'email', 'phone'],
+  scopes: ['openid', 'email', 'phone', 'profile'],
 
   // Response type for authorization flow
   responseType: 'code',
